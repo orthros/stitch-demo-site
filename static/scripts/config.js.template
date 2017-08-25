@@ -1,0 +1,4 @@
+const APP_ID = "<YOUR APP ID>";
+const APP_DB = '<YOUR APP DATABSE>';
+const APP_COLLECTION = '<YOUR APP COLLETION>';
+const APP_API_KEY = '<YOUR APP API KEY';

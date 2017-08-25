@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../static/css/bootstrap.min.css">            
+        <script src="../static/scripts/stitch.min.js"></script>
+        <script src="../static/scripts/config.js"></script>
+        <script>
+            const client = new stitch.StitchClient(APP_ID);
+            const db = client.service('mongodb', 'mongodb-atlas')
+                             .db(APP_DB);
+
+            function displayIssuesOnLoad() {
+                client.authenticate('apiKey', APP_API_KEY)
+                      .then(displayIssues);
+            }
+
+            function displayIssues() {
+                db.collection(APP_COLLECTION)
+                  .find({ }, { limit: 10 })
+                  .then(docs => {
+                    console.log(docs);
+                    var html = docs.map(c => `<div class="center-block">
+                                              <hr>
+                                              <div class="center-block text-center">Issue: <a href="${c.issue.issue.html_url}">${c.issue.issue.title}</a></div>
+                                              <div class="text-center">Comments: ${c.issue.issue.comments}</div>
+                                              <div class="text-center">
+                                              Repository:
+                                              <a href="${c.issue.repository.html_url}">${c.issue.repository.name}</a>
+                                              </div>
+                                              <hr>
+                                              </div>`)
+                                   .join("");
+                    document.getElementById("issues").innerHTML = html;
+                });
+            }
+        </script>
+    </head>
+    <body onLoad="displayIssuesOnLoad()">
+        <div class="container">
+            <br/>
+            <h3 class="text-center">Current GitHub Issues</h3>
+            <div class="container-fluid" id="issues">               
+            </div>
+        </div>
+    </body>
+</html>
